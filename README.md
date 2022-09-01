@@ -18,7 +18,7 @@ View your previous notes
 Enable or disable dark mode  
   
 - **All free** 🤑  
-No ad, no subscription. All features are freae
+No ad, no subscription. All features are free
 
 ___
 
