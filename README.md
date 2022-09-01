@@ -2,30 +2,32 @@
 # push note - notification notes
 push note is a free Android app that you can keep your notes in the notification bar in seconds.
 
+___
+
 ### Features 🌟
-**Super quick note** 📝  
+- **Super quick note** 📝  
 Keep your notes in the notification bar in seconds  
   
-**Pin your notes** 📌  
+- **Pin your notes** 📌  
 Never forget your important notes  
   
-**History** 📜  
+- **History** 📜  
 View your previous notes  
   
-**Dark mode support** 🌑  
+- **Dark mode support** 🌑  
 Enable or disable dark mode  
   
-**All free** 🤑  
+- **All free** 🤑  
 No ad, no subscription. All features are freae
 
 ___
 
 ### Technical Details ⚙️
 
-* [Kotlin](https://kotlinlang.org/) 
-* [Jetpack Compose](https://developer.android.com/jetpack/compose)
-* [Jetpack Architecture Components](https://developer.android.com/topic/libraries/architecture/) - Room, Lifecycle, ViewModel
-* [Dagger Hilt](https://dagger.dev/hilt/)
+- [Kotlin](https://kotlinlang.org/) 
+- [Jetpack Compose](https://developer.android.com/jetpack/compose)
+- [Jetpack Architecture Components](https://developer.android.com/topic/libraries/architecture/) - Room, Lifecycle, ViewModel
+- [Dagger Hilt](https://dagger.dev/hilt/)
 ___
 
 ### Screenshots 📸
