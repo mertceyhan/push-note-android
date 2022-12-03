@@ -34,8 +34,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.insets.statusBarsPadding
 import com.penguenlabs.pushnote.R
 import com.penguenlabs.pushnote.data.local.entity.HistoryEntity
+import com.penguenlabs.pushnote.navigation.Destination
 import com.penguenlabs.pushnote.theme.PushNoteTheme
 import com.penguenlabs.pushnote.util.OverlayBottomSheetScaffold
+import com.penguenlabs.pushnote.util.Screen
 import com.penguenlabs.pushnote.util.TimeFormat
 import kotlinx.coroutines.launch
 
@@ -43,36 +45,34 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun HistoryScreen(
-    historyViewModel: HistoryViewModel = hiltViewModel(),
-    onBackPressClick: () -> Unit = {}
+    historyViewModel: HistoryViewModel = hiltViewModel(), onBackPressClick: () -> Unit = {}
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     val historyScreenState = historyViewModel.historyScreenState
     val context = LocalContext.current
 
-    OverlayBottomSheetScaffold(scaffoldState = scaffoldState, sheetContent = {
-        Column(
-            modifier = Modifier.padding(vertical = 16.dp)
-        ) {
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                Box(
-                    modifier = Modifier
-                        .height(5.dp)
-                        .width(35.dp)
-                        .clip(RoundedCornerShape(percent = 50))
-                        .background(Color.Gray)
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                modifier = Modifier
+    Screen(context = context, destination = Destination.History) {
+        OverlayBottomSheetScaffold(scaffoldState = scaffoldState, sheetContent = {
+            Column(
+                modifier = Modifier.padding(vertical = 16.dp)
+            ) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier
+                            .height(5.dp)
+                            .width(35.dp)
+                            .clip(RoundedCornerShape(percent = 50))
+                            .background(Color.Gray)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
                         historyScreenState.selectedHistoryEntity?.let {
                             historyViewModel.sendNotification(
-                                pushNotificationText = it.note,
-                                isPinnedNote = it.isPinnedNote
+                                pushNotificationText = it.note, isPinnedNote = it.isPinnedNote
                             )
                         }
 
@@ -81,13 +81,11 @@ fun HistoryScreen(
                         }
                     }
                     .padding(16.dp),
-                text = stringResource(id = R.string.push),
-                color = MaterialTheme.colors.onBackground,
-                style = MaterialTheme.typography.h6,
-                fontSize = 16.sp
-            )
-            Text(
-                modifier = Modifier
+                    text = stringResource(id = R.string.push),
+                    color = MaterialTheme.colors.onBackground,
+                    style = MaterialTheme.typography.h6,
+                    fontSize = 16.sp)
+                Text(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
                         historyScreenState.selectedHistoryEntity?.let {
@@ -100,9 +98,7 @@ fun HistoryScreen(
 
                             Toast
                                 .makeText(
-                                    context,
-                                    context.getString(R.string.copied),
-                                    Toast.LENGTH_LONG
+                                    context, context.getString(R.string.copied), Toast.LENGTH_LONG
                                 )
                                 .show()
                         }
@@ -112,13 +108,11 @@ fun HistoryScreen(
                         }
                     }
                     .padding(16.dp),
-                text = stringResource(id = R.string.copy),
-                color = MaterialTheme.colors.onBackground,
-                style = MaterialTheme.typography.h6,
-                fontSize = 16.sp
-            )
-            Text(
-                modifier = Modifier
+                    text = stringResource(id = R.string.copy),
+                    color = MaterialTheme.colors.onBackground,
+                    style = MaterialTheme.typography.h6,
+                    fontSize = 16.sp)
+                Text(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
                         historyScreenState.selectedHistoryEntity?.let {
@@ -139,13 +133,11 @@ fun HistoryScreen(
                         }
                     }
                     .padding(16.dp),
-                text = stringResource(id = R.string.share),
-                color = MaterialTheme.colors.onBackground,
-                style = MaterialTheme.typography.h6,
-                fontSize = 16.sp
-            )
-            Text(
-                modifier = Modifier
+                    text = stringResource(id = R.string.share),
+                    color = MaterialTheme.colors.onBackground,
+                    style = MaterialTheme.typography.h6,
+                    fontSize = 16.sp)
+                Text(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
                         historyScreenState.selectedHistoryEntity?.let {
@@ -157,83 +149,80 @@ fun HistoryScreen(
                         }
                     }
                     .padding(16.dp),
-                text = stringResource(id = R.string.delete),
-                color = MaterialTheme.colors.onBackground,
-                style = MaterialTheme.typography.h6,
-                fontSize = 16.sp
-            )
-        }
-    }) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background)
-                .statusBarsPadding(),
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(id = R.string.history),
-                    style = MaterialTheme.typography.h5,
-                    color = MaterialTheme.colors.onBackground,
-                    textAlign = TextAlign.Center
-                )
-
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clickable { onBackPressClick() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(id = R.drawable.ic_back),
-                        contentDescription = stringResource(id = R.string.back),
-                        tint = MaterialTheme.colors.onBackground
-                    )
-                }
-            }
-
-            LazyColumn {
-                items(
-                    items = historyScreenState.historyItems,
-                    key = { it.id }) { historyEntity ->
-                    HistoryItem(
-                        historyEntity = historyEntity,
-                        onSendClick = historyViewModel::sendNotification,
-                        onLongClick = {
-                            historyViewModel.onHistoryEntitySelect(it)
-                            coroutineScope.launch {
-                                scaffoldState.bottomSheetState.expand()
-                            }
-                        }
-                    )
-                }
-            }
-        }
-
-        AnimatedVisibility(visible = historyScreenState.hasHistory().not()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.no_history),
+                    text = stringResource(id = R.string.delete),
                     color = MaterialTheme.colors.onBackground,
                     style = MaterialTheme.typography.h6,
-                    fontSize = 16.sp,
-                )
+                    fontSize = 16.sp)
+            }
+        }) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background)
+                    .statusBarsPadding(),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = stringResource(id = R.string.history),
+                        style = MaterialTheme.typography.h5,
+                        color = MaterialTheme.colors.onBackground,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clickable { onBackPressClick() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = painterResource(id = R.drawable.ic_back),
+                            contentDescription = stringResource(id = R.string.back),
+                            tint = MaterialTheme.colors.onBackground
+                        )
+                    }
+                }
+
+                LazyColumn {
+                    items(
+                        items = historyScreenState.historyItems,
+                        key = { it.id }) { historyEntity ->
+                        HistoryItem(historyEntity = historyEntity,
+                            onSendClick = historyViewModel::sendNotification,
+                            onLongClick = {
+                                historyViewModel.onHistoryEntitySelect(it)
+                                coroutineScope.launch {
+                                    scaffoldState.bottomSheetState.expand()
+                                }
+                            })
+                    }
+                }
+            }
+
+            AnimatedVisibility(visible = historyScreenState.hasHistory().not()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.no_history),
+                        color = MaterialTheme.colors.onBackground,
+                        style = MaterialTheme.typography.h6,
+                        fontSize = 16.sp,
+                    )
+                }
             }
         }
-    }
 
-    LaunchedEffect(Unit) {
-        historyViewModel.getAllHistory()
+        LaunchedEffect(Unit) {
+            historyViewModel.getAllHistory()
+        }
     }
 }
 
@@ -250,8 +239,7 @@ private fun HistoryItem(
             .fillMaxWidth()
             .combinedClickable(onClick = { }, onLongClick = { onLongClick(historyEntity) })
             .padding(16.dp)
-            .height(50.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .height(50.dp), verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
             modifier = Modifier.weight(1f),
