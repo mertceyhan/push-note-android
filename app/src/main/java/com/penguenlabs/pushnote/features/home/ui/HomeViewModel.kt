@@ -3,6 +3,7 @@ package com.penguenlabs.pushnote.features.home.ui
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.penguenlabs.pushnote.analytics.Event
@@ -32,8 +33,7 @@ class HomeViewModel @Inject constructor(
 
     fun onTextFieldValueChange(textFieldValue: String) {
         homeScreeState = homeScreeState.copy(
-            textFieldValue = textFieldValue,
-            isError = textFieldValue.isEmpty()
+            textFieldValue = textFieldValue, isError = textFieldValue.isEmpty()
         )
     }
 
@@ -53,7 +53,7 @@ class HomeViewModel @Inject constructor(
 
             insertHistory(pushNotificationText, isPinnedNote)
 
-            logPush()
+            logPush(pushNotificationText, isPinnedNote)
 
             homeScreeState.copy(textFieldValue = "", isError = false)
         }
@@ -75,7 +75,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun logPush() {
-        eventLogger.log(Event.Push)
+    private fun logPush(pushNotificationText: String, isPinnedNote: Boolean) {
+        eventLogger.log(
+            Event.Push, bundleOf(
+                Pair(Event.Push.PARAM_KEY_PUSH_NOTIFICATION_TEXT, pushNotificationText),
+                Pair(Event.Push.PARAM_KEY_IS_PINNED_NOTE, isPinnedNote)
+            )
+        )
     }
 }
