@@ -23,7 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -31,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import com.penguenlabs.pushnote.R
 import com.penguenlabs.pushnote.data.local.entity.HistoryEntity
@@ -51,11 +54,14 @@ fun HistoryScreen(
     val coroutineScope = rememberCoroutineScope()
     val historyScreenState = historyViewModel.historyScreenState
     val context = LocalContext.current
+    val hapticFeedback = LocalHapticFeedback.current
 
     Screen(context = context, destination = Destination.History) {
         OverlayBottomSheetScaffold(scaffoldState = scaffoldState, sheetContent = {
             Column(
-                modifier = Modifier.padding(vertical = 16.dp)
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .navigationBarsPadding()
             ) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     Box(
@@ -98,7 +104,9 @@ fun HistoryScreen(
 
                             Toast
                                 .makeText(
-                                    context, context.getString(R.string.copied), Toast.LENGTH_LONG
+                                    context,
+                                    context.getString(R.string.copied),
+                                    Toast.LENGTH_LONG
                                 )
                                 .show()
                         }
@@ -191,13 +199,13 @@ fun HistoryScreen(
                 }
 
                 LazyColumn {
-                    items(
-                        items = historyScreenState.historyItems,
+                    items(items = historyScreenState.historyItems,
                         key = { it.id }) { historyEntity ->
                         HistoryItem(historyEntity = historyEntity,
                             onSendClick = historyViewModel::sendNotification,
                             onLongClick = {
                                 historyViewModel.onHistoryEntitySelect(it)
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                                 coroutineScope.launch {
                                     scaffoldState.bottomSheetState.expand()
                                 }
