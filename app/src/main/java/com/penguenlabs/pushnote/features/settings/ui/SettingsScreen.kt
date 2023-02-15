@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.insets.systemBarsPadding
 import com.penguenlabs.pushnote.BuildConfig
 import com.penguenlabs.pushnote.R
 import com.penguenlabs.pushnote.navigation.Destination
@@ -50,8 +50,7 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(colors.background)
-                .verticalScroll(scrollableState)
-                .statusBarsPadding(),
+                .systemBarsPadding(),
         ) {
 
             Box(
@@ -83,114 +82,115 @@ fun SettingsScreen(
                 }
             }
 
-            Text(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                text = stringResource(id = R.string.general_settings),
-                style = typography.subtitle1,
-                color = colors.onBackground,
-                textAlign = TextAlign.Start
-            )
+                    .verticalScroll(scrollableState)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    text = stringResource(id = R.string.general_settings),
+                    style = typography.subtitle1,
+                    color = colors.onBackground,
+                    textAlign = TextAlign.Start
+                )
 
-            SettingItem(
-                settingTitle = stringResource(id = R.string.history),
-                settingDescription = stringResource(id = R.string.your_previous_notes),
-                settingIcon = painterResource(
-                    id = R.drawable.ic_history
-                ),
-                onItemClick = onHistoryClick
-            )
+                SettingItem(
+                    settingTitle = stringResource(id = R.string.history),
+                    settingDescription = stringResource(id = R.string.your_previous_notes),
+                    settingIcon = painterResource(
+                        id = R.drawable.ic_history
+                    ),
+                    onItemClick = onHistoryClick
+                )
 
-            SettingSwitchableItem(
-                settingTitle = stringResource(id = R.string.dark_mode),
-                settingDescription = stringResource(id = R.string.enable_dark_mode),
-                settingIcon = painterResource(id = R.drawable.ic_night_mode),
-                isChecked = settingsScreenState.darkModeEnabled,
-                onCheckedChange = {
-                    settingsViewModel.setDarkModeUserDefault(it)
-                    onDarkModeChange(it)
+                SettingSwitchableItem(settingTitle = stringResource(id = R.string.dark_mode),
+                    settingDescription = stringResource(id = R.string.enable_dark_mode),
+                    settingIcon = painterResource(id = R.drawable.ic_night_mode),
+                    isChecked = settingsScreenState.darkModeEnabled,
+                    onCheckedChange = {
+                        settingsViewModel.setDarkModeUserDefault(it)
+                        onDarkModeChange(it)
+                    })
+
+                SettingSwitchableItem(
+                    settingTitle = stringResource(id = R.string.default_pinned_note),
+                    settingDescription = stringResource(id = R.string.select_pinned_note_by_default),
+                    settingIcon = painterResource(id = R.drawable.ic_checkbox),
+                    isChecked = settingsScreenState.defaultPinnedNoteEnabled,
+                    onCheckedChange = settingsViewModel::setPinnedNoteUserDefault
+                )
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    text = stringResource(id = R.string.support_settings),
+                    style = typography.subtitle1,
+                    color = colors.onBackground,
+                    textAlign = TextAlign.Start
+                )
+
+                SettingItem(
+                    settingTitle = stringResource(id = R.string.share_this_application),
+                    settingDescription = stringResource(id = R.string.invite_your_friend_to_push_code),
+                    settingIcon = painterResource(id = R.drawable.ic_share)
+                ) {
+                    context.startActivity(
+                        Intent.createChooser(
+                            Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    "Heyy! Check out push note on Google Play; $APP_URL"
+                                )
+                                type = "text/plain"
+                            }, null
+                        )
+                    )
+
+                    settingsViewModel.onShareApplicationClick()
                 }
-            )
 
-            SettingSwitchableItem(
-                settingTitle = stringResource(id = R.string.default_pinned_note),
-                settingDescription = stringResource(id = R.string.select_pinned_note_by_default),
-                settingIcon = painterResource(id = R.drawable.ic_checkbox),
-                isChecked = settingsScreenState.defaultPinnedNoteEnabled,
-                onCheckedChange = settingsViewModel::setPinnedNoteUserDefault
-            )
-
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                text = stringResource(id = R.string.support_settings),
-                style = typography.subtitle1,
-                color = colors.onBackground,
-                textAlign = TextAlign.Start
-            )
-
-            SettingItem(
-                settingTitle = stringResource(id = R.string.share_this_application),
-                settingDescription = stringResource(id = R.string.invite_your_friend_to_push_code),
-                settingIcon = painterResource(id = R.drawable.ic_share)
-            ) {
-                context.startActivity(
-                    Intent.createChooser(
-                        Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(
-                                Intent.EXTRA_TEXT,
-                                "Heyy! Check out push note on Google Play; $APP_URL"
-                            )
-                            type = "text/plain"
-                        },
-                        null
+                SettingItem(
+                    settingTitle = stringResource(id = R.string.report_a_problem),
+                    settingDescription = stringResource(id = R.string.help_us_make_push_note_better),
+                    settingIcon = painterResource(id = R.drawable.ic_report_problem)
+                ) {
+                    context.startActivity(
+                        Intent.createChooser(
+                            Intent(Intent.ACTION_SENDTO).apply {
+                                data = Uri.parse("mailto:$PENGUENLABS_MAIL")
+                            }, null
+                        )
                     )
-                )
 
-                settingsViewModel.onShareApplicationClick()
-            }
+                    settingsViewModel.onReportProblemClick()
+                }
 
-            SettingItem(
-                settingTitle = stringResource(id = R.string.report_a_problem),
-                settingDescription = stringResource(id = R.string.help_us_make_push_note_better),
-                settingIcon = painterResource(id = R.drawable.ic_report_problem)
-            ) {
-                context.startActivity(
-                    Intent.createChooser(
-                        Intent(Intent.ACTION_SENDTO).apply {
-                            data = Uri.parse("mailto:$PENGUENLABS_MAIL")
-                        },
-                        null
+                SettingItem(
+                    settingTitle = stringResource(id = R.string.rate_us),
+                    settingDescription = stringResource(id = R.string.share_your_feedback_with_us),
+                    settingIcon = painterResource(id = R.drawable.ic_star)
+                ) {
+                    context.startActivity(
+                        Intent.createChooser(
+                            Intent(Intent.ACTION_VIEW, Uri.parse(APP_URL)), null
+                        )
                     )
+
+                    settingsViewModel.onRateUsClick()
+                }
+
+                SettingItem(
+                    settingTitle = stringResource(id = R.string.version, BuildConfig.VERSION_NAME),
+                    settingDescription = stringResource(id = R.string.current_application_version),
+                    settingIcon = painterResource(id = R.drawable.ic_code),
+                    isClickable = false
                 )
-
-                settingsViewModel.onReportProblemClick()
             }
-
-            SettingItem(
-                settingTitle = stringResource(id = R.string.rate_us),
-                settingDescription = stringResource(id = R.string.share_your_feedback_with_us),
-                settingIcon = painterResource(id = R.drawable.ic_star)
-            ) {
-                context.startActivity(
-                    Intent.createChooser(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(APP_URL)),
-                        null
-                    )
-                )
-
-                settingsViewModel.onRateUsClick()
-            }
-
-            SettingItem(
-                settingTitle = stringResource(id = R.string.version, BuildConfig.VERSION_NAME),
-                settingDescription = stringResource(id = R.string.current_application_version),
-                settingIcon = painterResource(id = R.drawable.ic_code),
-                isClickable = false
-            )
         }
     }
 }
@@ -209,13 +209,10 @@ private fun SettingItem(
             .fillMaxWidth()
             .clickable(onClick = onItemClick, enabled = isClickable)
             .padding(16.dp)
-            .height(50.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .height(50.dp), verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = settingIcon,
-            contentDescription = null,
-            tint = colors.onBackground
+            painter = settingIcon, contentDescription = null, tint = colors.onBackground
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -231,9 +228,7 @@ private fun SettingItem(
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
-                text = settingDescription,
-                color = colors.onBackground,
-                style = typography.body2
+                text = settingDescription, color = colors.onBackground, style = typography.body2
             )
         }
     }
@@ -256,9 +251,7 @@ private fun SettingSwitchableItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = settingIcon,
-            contentDescription = null,
-            tint = colors.onBackground
+            painter = settingIcon, contentDescription = null, tint = colors.onBackground
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -274,9 +267,7 @@ private fun SettingSwitchableItem(
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
-                text = settingDescription,
-                color = colors.onBackground,
-                style = typography.body2
+                text = settingDescription, color = colors.onBackground, style = typography.body2
             )
         }
 

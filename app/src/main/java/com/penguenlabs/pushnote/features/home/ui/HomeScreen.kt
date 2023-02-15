@@ -107,17 +107,14 @@ fun HomeScreen(
                     modifier = Modifier.height(32.dp)
                 )
 
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(45.dp),
-                    onClick = {
-                        homeViewModel.sendNotification(
-                            pushNotificationText = homeScreeState.textFieldValue,
-                            isPinnedNote = homeScreeState.isPinnedNote
-                        )
-                    }
-                ) {
+                Button(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(45.dp), onClick = {
+                    homeViewModel.sendNotification(
+                        pushNotificationText = homeScreeState.textFieldValue,
+                        isPinnedNote = homeScreeState.isPinnedNote
+                    )
+                }) {
                     Text(text = stringResource(id = R.string.push), color = colors.onPrimary)
                 }
 
