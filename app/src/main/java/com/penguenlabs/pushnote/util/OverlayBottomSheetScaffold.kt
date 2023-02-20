@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,7 +38,9 @@ fun OverlayBottomSheetScaffold(
         sheetContent = sheetContent,
         scaffoldState = scaffoldState,
         sheetPeekHeight = sheetPeekHeight,
-        sheetShape = sheetShapes
+        sheetShape = sheetShapes,
+        backgroundColor = MaterialTheme.colorScheme.surface,
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
         Box {
             content(it)

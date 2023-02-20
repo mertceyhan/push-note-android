@@ -111,6 +111,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.0.1')
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
     implementation "com.google.accompanist:accompanist-insets:0.22.0-rc"
+    implementation "androidx.compose.material3:material3:1.0.1"
+    implementation "androidx.compose.material3:material3-window-size-class:1.0.1"
 
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 

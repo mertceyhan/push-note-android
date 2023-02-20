@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -28,6 +26,7 @@ import kotlinx.coroutines.delay
 
 private const val FOCUS_REQUEST_DELAY: Long = 300
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
@@ -45,13 +44,13 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .clip(RoundedCornerShape(24.dp))
-                    .background(color = colors.background)
+                    .background(color = MaterialTheme.colorScheme.background)
                     .padding(24.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.push_note),
-                    style = typography.h6,
-                    color = colors.onBackground
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
                 Spacer(
@@ -75,7 +74,7 @@ fun HomeScreen(
                             isPinnedNote = homeScreeState.isPinnedNote
                         )
                     }),
-                    colors = TextFieldDefaults.textFieldColors(textColor = colors.onBackground),
+                    colors = TextFieldDefaults.textFieldColors(textColor = MaterialTheme.colorScheme.onBackground),
                     isError = homeScreeState.isError
                 )
 
@@ -98,8 +97,8 @@ fun HomeScreen(
 
                     Text(
                         text = stringResource(id = R.string.pinned_note),
-                        color = colors.onBackground,
-                        style = typography.body2
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
 
@@ -115,7 +114,10 @@ fun HomeScreen(
                         isPinnedNote = homeScreeState.isPinnedNote
                     )
                 }) {
-                    Text(text = stringResource(id = R.string.push), color = colors.onPrimary)
+                    Text(
+                        text = stringResource(id = R.string.push),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 }
 
                 Spacer(
@@ -128,7 +130,10 @@ fun HomeScreen(
                         .height(45.dp),
                     onClick = onSettingsButtonClick
                 ) {
-                    Text(text = stringResource(id = R.string.settings), color = colors.onBackground)
+                    Text(
+                        text = stringResource(id = R.string.settings),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 }
             }
 

@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
@@ -35,56 +34,44 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-
             val darkMode = mainViewModel.darkModeState
 
             PushNoteTheme(darkTheme = darkMode) {
                 ProvideWindowInsets {
+                    val navController = rememberNavController()
                     val systemUiController = rememberSystemUiController()
-                    val darkIcons = MaterialTheme.colors.isLight
+
+                    NavHost(
+                        navController = navController, startDestination = Destination.Home.route
+                    ) {
+                        composable(route = Destination.Home.route) {
+                            HomeScreen(onDialogDismissRequest = {
+                                finish()
+                            }, onSettingsButtonClick = {
+                                navController.navigate(route = Destination.Settings.route)
+                            })
+                        }
+                        composable(route = Destination.Settings.route) {
+                            SettingsScreen(onDarkModeChange = {
+                                mainViewModel.onDarkModeChanged(it)
+                            }, onHistoryClick = {
+                                navController.navigate(route = Destination.History.route)
+                            }, onBackPressClick = {
+                                navController.navigateUp()
+                            })
+                        }
+                        composable(route = Destination.History.route) {
+                            HistoryScreen(onBackPressClick = {
+                                navController.navigateUp()
+                            })
+                        }
+                    }
 
                     SideEffect {
                         systemUiController.setSystemBarsColor(
-                            Color.Transparent,
-                            darkIcons = darkIcons
+                            color = Color.Transparent,
+                            darkIcons = darkMode.not()
                         )
-                    }
-
-                    val navController = rememberNavController()
-
-                    NavHost(
-                        navController = navController,
-                        startDestination = Destination.Home.route
-                    ) {
-                        composable(route = Destination.Home.route) {
-                            HomeScreen(
-                                onDialogDismissRequest = {
-                                    finish()
-                                },
-                                onSettingsButtonClick = {
-                                    navController.navigate(route = Destination.Settings.route)
-                                }
-                            )
-                        }
-                        composable(route = Destination.Settings.route) {
-                            SettingsScreen(
-                                onDarkModeChange = {
-                                    mainViewModel.onDarkModeChanged(it)
-                                },
-                                onHistoryClick = {
-                                    navController.navigate(route = Destination.History.route)
-                                },
-                                onBackPressClick = {
-                                    navController.navigateUp()
-                                })
-                        }
-                        composable(route = Destination.History.route) {
-                            HistoryScreen(
-                                onBackPressClick = {
-                                    navController.navigateUp()
-                                }
-                            )
-                        }
                     }
                 }
             }

@@ -8,11 +8,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +48,7 @@ fun SettingsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(colors.background)
+                .background(MaterialTheme.colorScheme.background)
                 .systemBarsPadding(),
         ) {
 
@@ -62,8 +61,8 @@ fun SettingsScreen(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(id = R.string.settings),
-                    style = typography.h5,
-                    color = colors.onBackground,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center
                 )
 
@@ -77,7 +76,7 @@ fun SettingsScreen(
                         modifier = Modifier.size(24.dp),
                         painter = painterResource(id = R.drawable.ic_back),
                         contentDescription = stringResource(id = R.string.back),
-                        tint = colors.onBackground
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
@@ -92,8 +91,8 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .padding(16.dp),
                     text = stringResource(id = R.string.general_settings),
-                    style = typography.subtitle1,
-                    color = colors.onBackground,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Start
                 )
 
@@ -128,8 +127,8 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .padding(16.dp),
                     text = stringResource(id = R.string.support_settings),
-                    style = typography.subtitle1,
-                    color = colors.onBackground,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Start
                 )
 
@@ -212,7 +211,9 @@ private fun SettingItem(
             .height(50.dp), verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = settingIcon, contentDescription = null, tint = colors.onBackground
+            painter = settingIcon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -220,15 +221,17 @@ private fun SettingItem(
         Column {
             Text(
                 text = settingTitle,
-                color = colors.onBackground,
-                style = typography.h6,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.titleLarge,
                 fontSize = 16.sp
             )
 
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
-                text = settingDescription, color = colors.onBackground, style = typography.body2
+                text = settingDescription,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyMedium
             )
         }
     }
@@ -251,7 +254,9 @@ private fun SettingSwitchableItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = settingIcon, contentDescription = null, tint = colors.onBackground
+            painter = settingIcon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -259,15 +264,17 @@ private fun SettingSwitchableItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = settingTitle,
-                color = colors.onBackground,
-                style = typography.h6,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.titleLarge,
                 fontSize = 16.sp
             )
 
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
-                text = settingDescription, color = colors.onBackground, style = typography.body2
+                text = settingDescription,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyMedium
             )
         }
 

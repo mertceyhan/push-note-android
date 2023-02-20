@@ -15,14 +15,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -60,6 +63,7 @@ fun HistoryScreen(
         OverlayBottomSheetScaffold(scaffoldState = scaffoldState, sheetContent = {
             Column(
                 modifier = Modifier
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(top = 16.dp)
                     .navigationBarsPadding()
             ) {
@@ -69,7 +73,7 @@ fun HistoryScreen(
                             .height(5.dp)
                             .width(35.dp)
                             .clip(RoundedCornerShape(percent = 50))
-                            .background(Color.Gray)
+                            .background(MaterialTheme.colorScheme.outline)
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -88,8 +92,8 @@ fun HistoryScreen(
                     }
                     .padding(16.dp),
                     text = stringResource(id = R.string.push),
-                    color = MaterialTheme.colors.onBackground,
-                    style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleLarge,
                     fontSize = 16.sp)
                 Text(modifier = Modifier
                     .fillMaxWidth()
@@ -104,9 +108,7 @@ fun HistoryScreen(
 
                             Toast
                                 .makeText(
-                                    context,
-                                    context.getString(R.string.copied),
-                                    Toast.LENGTH_LONG
+                                    context, context.getString(R.string.copied), Toast.LENGTH_LONG
                                 )
                                 .show()
                         }
@@ -117,8 +119,8 @@ fun HistoryScreen(
                     }
                     .padding(16.dp),
                     text = stringResource(id = R.string.copy),
-                    color = MaterialTheme.colors.onBackground,
-                    style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleLarge,
                     fontSize = 16.sp)
                 Text(modifier = Modifier
                     .fillMaxWidth()
@@ -142,8 +144,8 @@ fun HistoryScreen(
                     }
                     .padding(16.dp),
                     text = stringResource(id = R.string.share),
-                    color = MaterialTheme.colors.onBackground,
-                    style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleLarge,
                     fontSize = 16.sp)
                 Text(modifier = Modifier
                     .fillMaxWidth()
@@ -158,15 +160,15 @@ fun HistoryScreen(
                     }
                     .padding(16.dp),
                     text = stringResource(id = R.string.delete),
-                    color = MaterialTheme.colors.onBackground,
-                    style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleLarge,
                     fontSize = 16.sp)
             }
         }) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.background)
+                    .background(MaterialTheme.colorScheme.background)
                     .systemBarsPadding(),
             ) {
                 Box(
@@ -178,8 +180,8 @@ fun HistoryScreen(
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(id = R.string.history),
-                        style = MaterialTheme.typography.h5,
-                        color = MaterialTheme.colors.onBackground,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onBackground,
                         textAlign = TextAlign.Center
                     )
 
@@ -193,13 +195,14 @@ fun HistoryScreen(
                             modifier = Modifier.size(24.dp),
                             painter = painterResource(id = R.drawable.ic_back),
                             contentDescription = stringResource(id = R.string.back),
-                            tint = MaterialTheme.colors.onBackground
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
 
                 LazyColumn {
-                    items(items = historyScreenState.historyItems,
+                    items(
+                        items = historyScreenState.historyItems,
                         key = { it.id }) { historyEntity ->
                         HistoryItem(historyEntity = historyEntity,
                             onSendClick = historyViewModel::sendNotification,
@@ -220,8 +223,8 @@ fun HistoryScreen(
                 ) {
                     Text(
                         text = stringResource(id = R.string.no_history),
-                        color = MaterialTheme.colors.onBackground,
-                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.titleLarge,
                         fontSize = 16.sp,
                     )
                 }
@@ -255,8 +258,8 @@ private fun HistoryItem(
         ) {
             Text(
                 text = historyEntity.note,
-                color = MaterialTheme.colors.onBackground,
-                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.titleLarge,
                 fontSize = 16.sp
             )
 
@@ -264,8 +267,8 @@ private fun HistoryItem(
 
             Text(
                 text = TimeFormat.format(historyEntity.time),
-                color = MaterialTheme.colors.onBackground,
-                style = MaterialTheme.typography.body2
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyMedium
             )
         }
 
@@ -279,7 +282,7 @@ private fun HistoryItem(
                 modifier = Modifier.size(24.dp),
                 painter = painterResource(id = R.drawable.ic_send),
                 contentDescription = stringResource(id = R.string.push),
-                tint = MaterialTheme.colors.onBackground
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
     }
