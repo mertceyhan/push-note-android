@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -14,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -86,15 +89,17 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Checkbox(
-                        checked = homeScreeState.isPinnedNote,
-                        onCheckedChange = homeViewModel::onCheckedChange
-                    )
+                    CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
+                        val hapticFeedback = LocalHapticFeedback.current
 
+                        Checkbox(checked = homeScreeState.isPinnedNote, onCheckedChange = {
+                            homeViewModel.onCheckedChange(it)
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        })
+                    }
                     Spacer(
                         modifier = Modifier.width(8.dp)
                     )
-
                     Text(
                         text = stringResource(id = R.string.pinned_note),
                         color = MaterialTheme.colorScheme.onBackground,

@@ -1,7 +1,6 @@
 package com.penguenlabs.pushnote.features.settings.ui
 
 import android.content.Intent
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,11 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,9 +35,10 @@ import com.penguenlabs.pushnote.util.Screen
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel = hiltViewModel(),
-    onDarkModeChange: (Boolean) -> Unit = {},
-    onHistoryClick: () -> Unit = {},
-    onBackPressClick: () -> Unit = {}
+    onDarkModeChange: (Boolean) -> Unit,
+    onHistoryClick: () -> Unit,
+    onBackPressClick: () -> Unit,
+    onThemeClick: () -> Unit
 ) {
 
     val context = LocalContext.current
@@ -189,6 +190,26 @@ fun SettingsScreen(
                     settingIcon = painterResource(id = R.drawable.ic_code),
                     isClickable = false
                 )
+
+                if (BuildConfig.DEBUG) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        text = stringResource(id = R.string.developer_settings),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Start
+                    )
+
+                    SettingItem(
+                        settingTitle = stringResource(id = R.string.theme),
+                        settingDescription = stringResource(id = R.string.see_color_and_typography_tokens),
+                        settingIcon = painterResource(id = R.drawable.ic_palette)
+                    ) {
+                        onThemeClick()
+                    }
+                }
             }
         }
     }
@@ -246,6 +267,8 @@ private fun SettingSwitchableItem(
     isChecked: Boolean,
     onCheckedChange: (Boolean) -> Unit = {},
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -258,9 +281,7 @@ private fun SettingSwitchableItem(
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onBackground
         )
-
         Spacer(modifier = Modifier.width(16.dp))
-
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = settingTitle,
@@ -268,23 +289,16 @@ private fun SettingSwitchableItem(
                 style = MaterialTheme.typography.titleLarge,
                 fontSize = 16.sp
             )
-
             Spacer(modifier = Modifier.height(2.dp))
-
             Text(
                 text = settingDescription,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyMedium
             )
         }
-
-        Switch(checked = isChecked, onCheckedChange = onCheckedChange)
+        Switch(checked = isChecked, onCheckedChange = {
+            onCheckedChange(it)
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+        })
     }
-}
-
-@Preview(showSystemUi = true)
-@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun SettingsScreenPreview() {
-    SettingsScreen()
 }

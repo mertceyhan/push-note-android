@@ -1,13 +1,13 @@
 package com.penguenlabs.pushnote.theme
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 
 
-private val LightColors = lightColorScheme(
+private val lightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
     primaryContainer = md_theme_light_primaryContainer,
     onPrimary = md_theme_light_onPrimary,
@@ -40,7 +40,7 @@ private val LightColors = lightColorScheme(
 )
 
 
-private val DarkColors = darkColorScheme(
+private val darkColorScheme = darkColorScheme(
     primary = md_theme_dark_primary,
     primaryContainer = md_theme_dark_primaryContainer,
     onPrimary = md_theme_dark_onPrimary,
@@ -72,15 +72,29 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+private fun hasDynamicColorSupport(): Boolean {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+}
+
 @Composable
 fun PushNoteTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (!darkTheme) {
-        LightColors
-    } else {
-        DarkColors
+    val hasDynamicColorSupport = hasDynamicColorSupport()
+    val colors = when {
+        hasDynamicColorSupport && darkTheme -> {
+            dynamicDarkColorScheme(LocalContext.current)
+        }
+        hasDynamicColorSupport && !darkTheme -> {
+            dynamicLightColorScheme(LocalContext.current)
+        }
+        darkTheme -> {
+            darkColorScheme
+        }
+        else -> {
+            lightColorScheme
+        }
     }
 
     MaterialTheme(
-        colorScheme = colors, content = content
+        colorScheme = colors, content = content, typography = typography
     )
 }
