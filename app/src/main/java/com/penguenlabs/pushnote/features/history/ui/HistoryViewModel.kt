@@ -11,6 +11,8 @@ import com.penguenlabs.pushnote.data.local.entity.HistoryEntity
 import com.penguenlabs.pushnote.features.history.data.HistoryRepository
 import com.penguenlabs.pushnote.pushnotification.sender.NotificationSender
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +27,13 @@ class HistoryViewModel @Inject constructor(
         private set
 
     fun getAllHistory() {
+        var isFirstCollect = true
+
         viewModelScope.launch {
-            historyRepository.getAllHistory().collect { historyItems ->
+            historyRepository.getAllHistory().debounce {
+                if (isFirstCollect) 0 else 500
+            }.collectLatest { historyItems ->
+                isFirstCollect = false
                 historyScreenState = historyScreenState.copy(
                     historyItems = historyItems
                 )
@@ -46,23 +53,34 @@ class HistoryViewModel @Inject constructor(
         getAllHistory()
     }
 
-    fun onHistoryEntitySelect(historyEntity: HistoryEntity) {
-        historyScreenState = historyScreenState.copy(selectedHistoryEntity = historyEntity)
+    fun onHistoryEntitySelect(isSelected: Boolean, historyEntity: HistoryEntity) {
+        historyScreenState =
+            historyScreenState.copy(selectedHistoryEntities = historyScreenState.selectedHistoryEntities.toMutableList()
+                .apply {
+                    if (isSelected) {
+                        add(historyEntity)
+                    } else {
+                        remove(historyEntity)
+                    }
+                })
     }
 
-    fun onCopyClick() {
-        eventLogger.log(Event.Copy)
+    fun onCloseClick() {
+        historyScreenState = historyScreenState.copy(selectedHistoryEntities = emptyList())
     }
 
-    fun onShareClick() {
-        eventLogger.log(Event.Share)
-    }
-
-    fun onDeleteClick(historyEntity: HistoryEntity) {
+    fun onDeleteAllClick(selectedHistoryEntities: List<HistoryEntity>) {
         viewModelScope.launch {
-            historyRepository.deleteHistory(historyEntity)
-        }
+            selectedHistoryEntities.forEach { historyEntry ->
+                historyRepository.deleteHistory(historyEntry)
+            }
 
-        eventLogger.log(Event.Delete)
+            historyScreenState = historyScreenState.copy(selectedHistoryEntities = emptyList())
+        }
+    }
+
+    fun onSelectAllClick() {
+        historyScreenState =
+            historyScreenState.copy(selectedHistoryEntities = historyScreenState.historyItems.toMutableList())
     }
 }

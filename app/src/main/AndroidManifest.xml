@@ -4,17 +4,14 @@
 
     <application
         android:name=".PushNoteApplication"
-        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
-        android:supportsRtl="true"
         android:theme="@style/Theme.PushNote">
 
         <activity
             android:name=".features.MainActivity"
             android:exported="true"
-            android:screenOrientation="unspecified"
             android:theme="@style/Theme.PushNote.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

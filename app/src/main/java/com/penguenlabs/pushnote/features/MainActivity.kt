@@ -82,7 +82,6 @@ class MainActivity : ComponentActivity() {
                             TypographyScreen()
                         }
                     }
-
                     SideEffect {
                         systemUiController.setSystemBarsColor(
                             color = Color.Transparent, darkIcons = darkMode.not()

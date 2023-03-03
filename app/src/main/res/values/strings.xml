@@ -29,6 +29,8 @@
     <string name="delete">Delete</string>
     <string name="copied">Copied</string>
     <string name="back">Back</string>
+    <string name="close">Close</string>
+    <string name="select_all">Select All</string>
     <string name="theme">Theme</string>
     <string name="see_color_and_typography_tokens">See color and typography tokens</string>
 </resources>
