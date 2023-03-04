@@ -33,4 +33,8 @@
     <string name="select_all">Select All</string>
     <string name="theme">Theme</string>
     <string name="see_color_and_typography_tokens">See color and typography tokens</string>
+    <string name="permission">Permission</string>
+    <string name="please_turn_on_notifications">Please turn on notifications</string>
+    <string name="notification_permission_description">push note allows you to keep your notes and reminders in the notification bar for quick access. To enable this feature, we need your permission to send notifications to your device.</string>
+    <string name="allow">Allow</string>
 </resources>

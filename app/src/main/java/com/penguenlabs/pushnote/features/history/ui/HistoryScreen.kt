@@ -1,6 +1,5 @@
 package com.penguenlabs.pushnote.features.history.ui
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -23,7 +22,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,7 +29,6 @@ import com.google.accompanist.insets.systemBarsPadding
 import com.penguenlabs.pushnote.R
 import com.penguenlabs.pushnote.data.local.entity.HistoryEntity
 import com.penguenlabs.pushnote.navigation.Destination
-import com.penguenlabs.pushnote.theme.PushNoteTheme
 import com.penguenlabs.pushnote.util.Screen
 import com.penguenlabs.pushnote.util.TimeFormat
 
@@ -116,6 +113,9 @@ fun HistoryScreen(
                                         historyViewModel.onDeleteAllClick(
                                             historyScreenState.selectedHistoryEntities
                                         )
+                                        hapticFeedback.performHapticFeedback(
+                                            HapticFeedbackType.LongPress
+                                        )
                                     }, contentAlignment = Alignment.Center
                             ) {
                                 Icon(
@@ -134,8 +134,12 @@ fun HistoryScreen(
                             Box(
                                 modifier = Modifier
                                     .size(48.dp)
-                                    .clickable { historyViewModel.onSelectAllClick() },
-                                contentAlignment = Alignment.Center
+                                    .clickable {
+                                        historyViewModel.onSelectAllClick()
+                                        hapticFeedback.performHapticFeedback(
+                                            HapticFeedbackType.LongPress
+                                        )
+                                    }, contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     modifier = Modifier.size(24.dp),
@@ -153,8 +157,12 @@ fun HistoryScreen(
                             Box(
                                 modifier = Modifier
                                     .size(48.dp)
-                                    .clickable { historyViewModel.onCloseClick() },
-                                contentAlignment = Alignment.Center
+                                    .clickable {
+                                        historyViewModel.onCloseClick()
+                                        hapticFeedback.performHapticFeedback(
+                                            HapticFeedbackType.LongPress
+                                        )
+                                    }, contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     modifier = Modifier.size(24.dp),

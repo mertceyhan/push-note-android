@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.SideEffect
@@ -18,6 +17,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.penguenlabs.pushnote.features.color.ColorScreen
 import com.penguenlabs.pushnote.features.history.ui.HistoryScreen
 import com.penguenlabs.pushnote.features.home.ui.HomeScreen
+import com.penguenlabs.pushnote.features.permission.NotificationPermissionScreen
 import com.penguenlabs.pushnote.features.settings.ui.SettingsScreen
 import com.penguenlabs.pushnote.features.theme.ThemeScreen
 import com.penguenlabs.pushnote.features.typography.TypographyScreen
@@ -25,7 +25,6 @@ import com.penguenlabs.pushnote.navigation.Destination
 import com.penguenlabs.pushnote.theme.PushNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-@OptIn(ExperimentalAnimationApi::class)
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @AndroidEntryPoint
@@ -53,18 +52,29 @@ class MainActivity : ComponentActivity() {
                                 finish()
                             }, onSettingsButtonClick = {
                                 navController.navigate(route = Destination.Settings.route)
+                            }, onNotificationPermissionNeed = { pushNotificationText ->
+                                navController.navigate(route = "${Destination.NotificationPermission.route}/$pushNotificationText")
+                            })
+                        }
+                        composable(route = "${Destination.Home.route}/{${Destination.Home.PARAM_PUSH_NOTIFICATION_TEXT}}") { navBackStackEntry ->
+                            HomeScreen(pushNotificationText = navBackStackEntry.arguments?.getString(
+                                Destination.Home.PARAM_PUSH_NOTIFICATION_TEXT, ""
+                            ).orEmpty(), onDialogDismissRequest = {
+                                finish()
+                            }, onSettingsButtonClick = {
+                                navController.navigate(route = Destination.Settings.route)
+                            }, onNotificationPermissionNeed = {
+                                navController.navigate(route = Destination.NotificationPermission.route)
                             })
                         }
                         composable(route = Destination.Settings.route) {
                             SettingsScreen(onDarkModeChange = {
                                 mainViewModel.onDarkModeChanged(it)
+                            }, onHistoryClick = {
+                                navController.navigate(route = Destination.History.route)
+                            }, onBackPressClick = {
+                                navController.navigateUp()
                             },
-                                onHistoryClick = {
-                                    navController.navigate(route = Destination.History.route)
-                                },
-                                onBackPressClick = {
-                                    navController.navigateUp()
-                                },
                                 onThemeClick = { navController.navigate(Destination.Theme.route) })
                         }
                         composable(route = Destination.History.route) {
@@ -80,6 +90,25 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = Destination.Typography.route) {
                             TypographyScreen()
+                        }
+                        composable(route = "${Destination.NotificationPermission.route}/{${Destination.NotificationPermission.PARAM_PUSH_NOTIFICATION_TEXT}}") { navBackStackEntry ->
+                            NotificationPermissionScreen(pushNotificationText = navBackStackEntry.arguments?.getString(
+                                Destination.NotificationPermission.PARAM_PUSH_NOTIFICATION_TEXT,
+                                ""
+                            ).orEmpty(), onBackPressClick = {
+                                navController.navigateUp()
+                            }, onPermissionGranted = { pushNotificationText ->
+                                if (pushNotificationText.isNotEmpty() and pushNotificationText.isNotBlank()) {
+                                    navController.navigate("${Destination.Home.route}/$pushNotificationText") {
+                                        launchSingleTop = true
+                                    }
+                                } else {
+                                    navController.navigate(Destination.Home.route) {
+                                        launchSingleTop = true
+                                    }
+                                }
+
+                            })
                         }
                     }
                     SideEffect {

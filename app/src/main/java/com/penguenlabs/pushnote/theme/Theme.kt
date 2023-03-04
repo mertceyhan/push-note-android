@@ -95,6 +95,9 @@ fun PushNoteTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composab
     }
 
     MaterialTheme(
-        colorScheme = colors, content = content, typography = typography
+        colorScheme = colors,
+        content = content,
+        typography = typography,
+        shapes = MaterialTheme.shapes
     )
 }

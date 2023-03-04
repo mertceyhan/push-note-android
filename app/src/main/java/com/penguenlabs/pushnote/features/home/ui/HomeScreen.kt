@@ -1,5 +1,6 @@
 package com.penguenlabs.pushnote.features.home.ui
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +23,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.penguenlabs.pushnote.R
 import com.penguenlabs.pushnote.navigation.Destination
 import com.penguenlabs.pushnote.util.Screen
@@ -29,20 +34,30 @@ import kotlinx.coroutines.delay
 
 private const val FOCUS_REQUEST_DELAY: Long = 300
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
+    pushNotificationText: String = "",
     onDialogDismissRequest: () -> Unit,
-    onSettingsButtonClick: () -> Unit
+    onSettingsButtonClick: () -> Unit,
+    onNotificationPermissionNeed: (pushNotificationText: String) -> Unit
 ) {
     Screen(destination = Destination.Home) {
         Dialog(
             onDismissRequest = onDialogDismissRequest
         ) {
             val textFieldFocusRequester = remember { FocusRequester() }
-
             val homeScreeState = homeViewModel.homeScreeState
+            val notificationPermissionState: PermissionState? =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    rememberPermissionState(
+                        android.Manifest.permission.POST_NOTIFICATIONS
+                    )
+                } else {
+                    null
+
+                }
 
             Column(
                 modifier = Modifier
@@ -55,11 +70,9 @@ fun HomeScreen(
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-
                 Spacer(
                     modifier = Modifier.height(16.dp)
                 )
-
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -80,11 +93,9 @@ fun HomeScreen(
                     colors = TextFieldDefaults.textFieldColors(textColor = MaterialTheme.colorScheme.onBackground),
                     isError = homeScreeState.isError
                 )
-
                 Spacer(
                     modifier = Modifier.height(12.dp)
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -106,34 +117,37 @@ fun HomeScreen(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-
                 Spacer(
                     modifier = Modifier.height(32.dp)
                 )
-
-                Button(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(45.dp), onClick = {
-                    homeViewModel.sendNotification(
-                        pushNotificationText = homeScreeState.textFieldValue,
-                        isPinnedNote = homeScreeState.isPinnedNote
-                    )
-                }) {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(45.dp), onClick = {
+                        if (notificationPermissionState?.status?.isGranted?.not() == true) {
+                            onNotificationPermissionNeed(homeScreeState.textFieldValue)
+                        } else {
+                            homeViewModel.sendNotification(
+                                pushNotificationText = homeScreeState.textFieldValue,
+                                isPinnedNote = homeScreeState.isPinnedNote
+                            )
+                        }
+                    }, shape = RoundedCornerShape(8.dp)
+                ) {
                     Text(
                         text = stringResource(id = R.string.push),
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
-
                 Spacer(
                     modifier = Modifier.height(8.dp)
                 )
-
                 TextButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(45.dp),
-                    onClick = onSettingsButtonClick
+                    onClick = onSettingsButtonClick,
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
                         text = stringResource(id = R.string.settings),
@@ -146,6 +160,12 @@ fun HomeScreen(
                 homeViewModel.updateScreenState()
                 delay(timeMillis = FOCUS_REQUEST_DELAY)
                 textFieldFocusRequester.requestFocus()
+
+                if (pushNotificationText.isNotEmpty() or pushNotificationText.isNotBlank()) {
+                    homeViewModel.sendNotification(
+                        pushNotificationText, homeScreeState.isPinnedNote
+                    )
+                }
             }
         }
     }

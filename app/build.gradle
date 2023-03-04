@@ -114,6 +114,7 @@ dependencies {
     implementation "androidx.compose.material3:material3:1.0.1"
     implementation "androidx.compose.material3:material3-window-size-class:1.0.1"
     implementation 'io.github.mertceyhan:compose-inappreviews:1.0.0'
+    implementation "com.google.accompanist:accompanist-permissions:0.27.1"
 
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 

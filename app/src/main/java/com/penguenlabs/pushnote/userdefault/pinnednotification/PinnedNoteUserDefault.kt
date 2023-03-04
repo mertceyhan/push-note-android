@@ -15,7 +15,7 @@ class PinnedNoteUserDefault @Inject constructor(
         }
     }
 
-    override fun getUserDefault(): Boolean = sharedPreferences.getBoolean(KEY, false)
+    override fun getUserDefault(): Boolean = sharedPreferences.getBoolean(KEY, true)
 
     companion object {
         private const val KEY = "PINNED_NOTE_USER_DEFAULT"
