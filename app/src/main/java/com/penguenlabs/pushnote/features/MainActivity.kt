@@ -53,7 +53,11 @@ class MainActivity : ComponentActivity() {
                             }, onSettingsButtonClick = {
                                 navController.navigate(route = Destination.Settings.route)
                             }, onNotificationPermissionNeed = { pushNotificationText ->
-                                navController.navigate(route = "${Destination.NotificationPermission.route}/$pushNotificationText")
+                                if (pushNotificationText.isNotEmpty() and pushNotificationText.isNotBlank()) {
+                                    navController.navigate(route = "${Destination.NotificationPermission.route}/$pushNotificationText")
+                                } else {
+                                    navController.navigate(route = Destination.NotificationPermission.route)
+                                }
                             })
                         }
                         composable(route = "${Destination.Home.route}/{${Destination.Home.PARAM_PUSH_NOTIFICATION_TEXT}}") { navBackStackEntry ->
@@ -90,6 +94,15 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = Destination.Typography.route) {
                             TypographyScreen()
+                        }
+                        composable(route = Destination.NotificationPermission.route) {
+                            NotificationPermissionScreen(onBackPressClick = {
+                                navController.navigateUp()
+                            }, onPermissionGranted = {
+                                navController.navigate(Destination.Home.route) {
+                                    launchSingleTop = true
+                                }
+                            })
                         }
                         composable(route = "${Destination.NotificationPermission.route}/{${Destination.NotificationPermission.PARAM_PUSH_NOTIFICATION_TEXT}}") { navBackStackEntry ->
                             NotificationPermissionScreen(pushNotificationText = navBackStackEntry.arguments?.getString(

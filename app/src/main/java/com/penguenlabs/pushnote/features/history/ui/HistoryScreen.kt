@@ -158,7 +158,7 @@ fun HistoryScreen(
                                 modifier = Modifier
                                     .size(48.dp)
                                     .clickable {
-                                        historyViewModel.onCloseClick()
+                                        historyViewModel.onDeselectAllClick()
                                         hapticFeedback.performHapticFeedback(
                                             HapticFeedbackType.LongPress
                                         )

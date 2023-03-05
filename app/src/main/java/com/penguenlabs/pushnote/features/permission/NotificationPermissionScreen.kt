@@ -55,7 +55,6 @@ fun NotificationPermissionScreen(
                     })
             } else {
                 null
-
             }
 
         Column(
