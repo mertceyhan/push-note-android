@@ -12,12 +12,14 @@ import com.penguenlabs.pushnote.R
 import com.penguenlabs.pushnote.pushnotification.broadcastreceiver.CopyBroadcastReceiver
 import com.penguenlabs.pushnote.pushnotification.broadcastreceiver.UnpinBroadcastReceiver
 import com.penguenlabs.pushnote.pushnotification.channel.MainNotificationChannel
+import com.penguenlabs.pushnote.pushnotification.counter.NotificationCounter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlin.random.Random
 
 class NotificationSender @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val notificationCounter: NotificationCounter
 ) {
 
     @SuppressLint("UnspecifiedImmutableFlag")
@@ -61,6 +63,8 @@ class NotificationSender @Inject constructor(
         with(NotificationManagerCompat.from(context)) {
             notify(Random.nextInt(), notification)
         }
+
+        notificationCounter.increaseNotificationCount()
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
@@ -134,5 +138,7 @@ class NotificationSender @Inject constructor(
         with(NotificationManagerCompat.from(context)) {
             notify(notificationId, notification)
         }
+
+        notificationCounter.increaseNotificationCount()
     }
 }

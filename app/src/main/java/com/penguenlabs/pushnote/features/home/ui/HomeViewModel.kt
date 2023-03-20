@@ -10,9 +10,12 @@ import com.penguenlabs.pushnote.analytics.Event
 import com.penguenlabs.pushnote.analytics.EventLogger
 import com.penguenlabs.pushnote.data.local.entity.HistoryEntity
 import com.penguenlabs.pushnote.features.home.data.HomeRepository
+import com.penguenlabs.pushnote.pushnotification.counter.NotificationCounter
 import com.penguenlabs.pushnote.pushnotification.sender.NotificationSender
 import com.penguenlabs.pushnote.userdefault.pinnednotification.PinnedNoteUserDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +25,7 @@ class HomeViewModel @Inject constructor(
     private val notificationSender: NotificationSender,
     private val homeRepository: HomeRepository,
     private val eventLogger: EventLogger,
+    private val notificationCounter: NotificationCounter
 ) : ViewModel() {
 
     var homeScreeState by mutableStateOf(
@@ -30,6 +34,11 @@ class HomeViewModel @Inject constructor(
         )
     )
         private set
+
+    private val _inAppReviewLauncher = MutableSharedFlow<Unit>()
+    val inAppReviewLauncher = _inAppReviewLauncher.asSharedFlow()
+
+    private val requiredNotificationCountRange = 8..10
 
     fun onTextFieldValueChange(textFieldValue: String) {
         homeScreeState = homeScreeState.copy(
@@ -54,6 +63,8 @@ class HomeViewModel @Inject constructor(
             insertHistory(pushNotificationText, isPinnedNote)
 
             logPush(pushNotificationText, isPinnedNote)
+
+            launchInAppReview()
 
             homeScreeState.copy(textFieldValue = "", isError = false)
         }
@@ -82,5 +93,14 @@ class HomeViewModel @Inject constructor(
                 Pair(Event.Push.PARAM_KEY_IS_PINNED_NOTE, isPinnedNote)
             )
         )
+    }
+
+    private fun launchInAppReview() {
+        if (requiredNotificationCountRange.contains(notificationCounter.getNotificationCount())) {
+            viewModelScope.launch {
+                _inAppReviewLauncher.emit(Unit)
+            }
+            eventLogger.log(Event.InAppReviewLaunched)
+        }
     }
 }

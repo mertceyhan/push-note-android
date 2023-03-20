@@ -16,4 +16,5 @@ sealed class Event(val name: String) {
     object HistorySelectAll : Event(name = "history_select_all")
     object HistoryDeselectAll : Event(name = "history_deselect_all")
     object HistoryOnLongClicked : Event(name = "history_on_long_clicked")
+    object InAppReviewLaunched : Event(name = "in_app_review_launched")
 }

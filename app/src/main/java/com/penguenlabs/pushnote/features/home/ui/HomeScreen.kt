@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -27,9 +28,11 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.mertceyhan.compose.inappreviews.rememberInAppReviewManager
 import com.penguenlabs.pushnote.R
 import com.penguenlabs.pushnote.navigation.Destination
 import com.penguenlabs.pushnote.util.Screen
+import com.penguenlabs.pushnote.util.findActivity
 import kotlinx.coroutines.delay
 
 private const val FOCUS_REQUEST_DELAY: Long = 300
@@ -56,8 +59,9 @@ fun HomeScreen(
                     )
                 } else {
                     null
-
                 }
+            val inAppReviewManager = rememberInAppReviewManager()
+            val context = LocalContext.current
 
             Column(
                 modifier = Modifier
@@ -165,6 +169,12 @@ fun HomeScreen(
                     homeViewModel.sendNotification(
                         pushNotificationText, homeScreeState.isPinnedNote
                     )
+                }
+            }
+
+            LaunchedEffect(Unit) {
+                homeViewModel.inAppReviewLauncher.collect {
+                    inAppReviewManager.launchReviewFlow(context.findActivity())
                 }
             }
         }
