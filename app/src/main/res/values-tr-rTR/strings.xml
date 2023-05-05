@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="push_note">push note</string>
+    <string name="push">Gönder</string>
+    <string name="main_notifications">Ana bildirimler</string>
+    <string name="your_note_goes_here">Notunuz buraya yazın</string>
+    <string name="pinned_note">Sabitleyin</string>
+    <string name="unpin">Sabitlemeyi kaldır</string>
+    <string name="settings">Ayarlar</string>
+    <string name="general_settings">Genel Ayarlar</string>
+    <string name="support_settings">Destek Ayarları</string>
+    <string name="developer_settings">Geliştirici Ayarları</string>
+    <string name="share_this_application">Bu uygulamayı paylaşın!</string>
+    <string name="invite_your_friend_to_push_code">Arkadaşınızı notifikasyon notuna davet edin</string>
+    <string name="report_a_problem">Sorun bildir</string>
+    <string name="help_us_make_push_note_better">Notifikasyon notunu daha iyi hale getirmemize yardımcı olun</string>
+    <string name="rate_us">Bize puan verin!</string>
+    <string name="share_your_feedback_with_us">Geri bildiriminizi bizimle paylaşın</string>
+    <string name="version">Sürüm: %1$s</string>
+    <string name="current_application_version">Geçerli uygulama sürümü</string>
+    <string name="dark_mode">Karanlık mod</string>
+    <string name="enable_dark_mode">Karanlık modu etkinleştirin</string>
+    <string name="default_pinned_note">Varsayılan sabitleyin</string>
+    <string name="select_pinned_note_by_default">"Varsayılan olarak sabitleyin seçin"</string>
+    <string name="history">Geçmiş</string>
+    <string name="your_previous_notes">Önceki notlarınız</string>
+    <string name="no_history">"Geçmiş yok"</string>
+    <string name="copy">Kopyala</string>
+    <string name="share">Paylaş</string>
+    <string name="delete">Sil</string>
+    <string name="copied">Kopyalandı</string>
+    <string name="back">Geri</string>
+    <string name="close">Kapat</string>
+    <string name="select_all">Tümünü Seç</string>
+    <string name="theme">Tema</string>
+    <string name="see_color_and_typography_tokens">Renk ve tipografi tokenlerını görün</string>
+    <string name="permission">İzin</string>
+    <string name="please_turn_on_notifications">Lütfen bildirimleri açın</string>
+    <string name="notification_permission_description">Notifikasyon notu, notlarınızı ve hatırlatmalarınızı hızlı erişim için bildirim çubuğunda tutmanıza olanak tanır. Bu özelliği etkinleştirmek için cihazınıza bildirim gönderme iznimize ihtiyacımız var.</string>
+    <string name="allow">İzin Ver</string>
+</resources>
