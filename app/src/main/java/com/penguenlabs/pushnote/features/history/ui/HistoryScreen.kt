@@ -206,10 +206,10 @@ fun HistoryScreen(
             }
         }
     }
-        LaunchedEffect(Unit) {
-            historyViewModel.getAllHistory()
-        }
+    LaunchedEffect(Unit) {
+        historyViewModel.getAllHistory()
     }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalFoundationApi
@@ -243,7 +243,7 @@ private fun HistoryItem(
         AnimatedVisibility(
             visible = isSelectable, enter = fadeIn() + expandIn(), exit = fadeOut() + shrinkOut()
         ) {
-            CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
+            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
                 val hapticFeedback = LocalHapticFeedback.current
 
                 Checkbox(modifier = Modifier.padding(end = 16.dp),

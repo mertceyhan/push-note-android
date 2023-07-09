@@ -123,9 +123,11 @@ fun NotificationPermissionScreen(
                             notificationPermissionState?.status?.isGranted == true -> {
                                 onPermissionGranted(pushNotificationText)
                             }
+
                             (notificationPermissionState?.status?.shouldShowRationale == true) or isPermissionDenied -> {
                                 openAppNotificationDeviceSettings(context)
                             }
+
                             else -> {
                                 notificationPermissionState?.launchPermissionRequest()
                             }
@@ -157,6 +159,7 @@ private fun openAppNotificationDeviceSettings(context: Context) {
                 action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
                 putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
             }
+
             else -> {
                 action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                 addCategory(Intent.CATEGORY_DEFAULT)

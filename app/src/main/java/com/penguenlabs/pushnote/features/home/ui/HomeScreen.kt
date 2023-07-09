@@ -2,11 +2,25 @@ package com.penguenlabs.pushnote.features.home.ui
 
 import android.os.Build
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -94,7 +108,7 @@ fun HomeScreen(
                             isPinnedNote = homeScreeState.isPinnedNote
                         )
                     }),
-                    colors = TextFieldDefaults.textFieldColors(textColor = MaterialTheme.colorScheme.onBackground),
+                    colors = OutlinedTextFieldDefaults.colors(focusedTextColor = MaterialTheme.colorScheme.onBackground),
                     isError = homeScreeState.isError
                 )
                 Spacer(
@@ -104,7 +118,7 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
+                    CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
                         val hapticFeedback = LocalHapticFeedback.current
 
                         Checkbox(checked = homeScreeState.isPinnedNote, onCheckedChange = {
