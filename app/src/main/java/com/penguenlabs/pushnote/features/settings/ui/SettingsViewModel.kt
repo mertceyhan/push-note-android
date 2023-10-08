@@ -29,11 +29,23 @@ class SettingsViewModel @Inject constructor(
     fun setDarkModeUserDefault(value: Boolean) {
         darkModeUserDefault.setUserDefault(value)
         settingsScreenState = settingsScreenState.copy(darkModeEnabled = value)
+
+        if (value) {
+            eventLogger.log(Event.DarkModeTurnedOn)
+        } else {
+            eventLogger.log(Event.DarkModeTurnedOff)
+        }
     }
 
     fun setPinnedNoteUserDefault(value: Boolean) {
         pinnedNoteUserDefault.setUserDefault(value)
         settingsScreenState = settingsScreenState.copy(defaultPinnedNoteEnabled = value)
+
+        if (value) {
+            eventLogger.log(Event.PinnedNoteTurnedOn)
+        } else {
+            eventLogger.log(Event.PinnedNoteTurnedOff)
+        }
     }
 
     fun onShareApplicationClick() {

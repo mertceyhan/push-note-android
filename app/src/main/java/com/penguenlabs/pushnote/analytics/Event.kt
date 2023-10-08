@@ -42,4 +42,24 @@ sealed class Event(val name: String) {
      * Represents an event when a user cancels their notification by swiping or using the "Clear All" button.
      */
     object NotificationCancelled : Event(name = "notification_cancelled")
+
+    /**
+     * Represents an event when a user turns on Dark Mode in their settings.
+     */
+    object DarkModeTurnedOn : Event(name = "dark_mode_turned_on")
+
+    /**
+     * Represents an event when a user turns off Dark Mode in their settings.
+     */
+    object DarkModeTurnedOff : Event(name = "dark_mode_turned_off")
+
+    /**
+     * Represents an event when a user turns on the option to pin notes in their settings.
+     */
+    object PinnedNoteTurnedOn : Event(name = "pinned_note_turned_on")
+
+    /**
+     * Represents an event when a user turns off the option to pin notes in their settings.
+     */
+    object PinnedNoteTurnedOff : Event(name = "pinned_note_turned_off")
 }
