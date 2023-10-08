@@ -14,4 +14,10 @@ class HistoryLocalDataSource @Inject constructor(
 
     suspend fun deleteHistory(historyEntity: HistoryEntity) =
         historyDao.deleteHistory(historyEntity)
+
+    suspend fun markAsCancelled(id: Long) =
+        historyDao.markAsCancelled(id)
+
+    suspend fun getActiveHistoryEntities(): List<HistoryEntity> =
+        historyDao.getActiveHistoryEntities()
 }

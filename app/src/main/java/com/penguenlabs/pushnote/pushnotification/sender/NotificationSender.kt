@@ -2,13 +2,11 @@ package com.penguenlabs.pushnote.pushnotification.sender
 
 import android.annotation.SuppressLint
 import android.app.Notification
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.penguenlabs.pushnote.R
+import com.penguenlabs.pushnote.activenotification.NotificationCancellationBroadcastReceiver
 import com.penguenlabs.pushnote.pushnotification.broadcastreceiver.CopyBroadcastReceiver
 import com.penguenlabs.pushnote.pushnotification.broadcastreceiver.UnpinBroadcastReceiver
 import com.penguenlabs.pushnote.pushnotification.channel.MainNotificationChannel
@@ -22,30 +20,21 @@ class NotificationSender @Inject constructor(
     private val notificationCounter: NotificationCounter
 ) {
 
-    @SuppressLint("UnspecifiedImmutableFlag")
-    fun sendNotification(pushNotificationText: String) {
+    @SuppressLint("UnspecifiedImmutableFlag", "MissingPermission")
+    fun sendNotification(
+        notificationEntityId: Long = Random.nextLong(),
+        pushNotificationText: String
+    ) {
         val notificationId = Random.nextInt()
-
-        val copyIntent = Intent(context, CopyBroadcastReceiver::class.java).apply {
-            action = CopyBroadcastReceiver.ACTION_COPY
-            putExtra(CopyBroadcastReceiver.KEY_NOTIFICATION_TEXT, pushNotificationText)
-        }
-
-        val copyPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getBroadcast(
+        val copyPendingIntent = CopyBroadcastReceiver.getPendingIntent(
+            context, notificationId, pushNotificationText
+        )
+        val cancelledNotificationPendingIntent =
+            NotificationCancellationBroadcastReceiver.getPendingIntent(
                 context,
                 notificationId,
-                copyIntent,
-                PendingIntent.FLAG_IMMUTABLE
+                notificationEntityId
             )
-        } else {
-            PendingIntent.getBroadcast(
-                context,
-                notificationId,
-                copyIntent,
-                0
-            )
-        }
 
         val notification = NotificationCompat.Builder(context, MainNotificationChannel.CHANNEL_ID)
             .apply {
@@ -57,6 +46,7 @@ class NotificationSender @Inject constructor(
                     context.getString(R.string.copy),
                     copyPendingIntent
                 )
+                setDeleteIntent(cancelledNotificationPendingIntent)
             }
             .build()
 
@@ -67,51 +57,24 @@ class NotificationSender @Inject constructor(
         notificationCounter.increaseNotificationCount()
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
-    fun sendPinnedNotification(pushNotificationText: String) {
+    @SuppressLint("UnspecifiedImmutableFlag", "MissingPermission")
+    fun sendPinnedNotification(
+        notificationEntityId: Long = Random.nextLong(),
+        pushNotificationText: String
+    ) {
         val notificationId = Random.nextInt()
-
-        val unpinIntent = Intent(context, UnpinBroadcastReceiver::class.java).apply {
-            action = UnpinBroadcastReceiver.ACTION_UNPIN
-            putExtra(UnpinBroadcastReceiver.KEY_NOTIFICATION_ID, notificationId)
-        }
-
-        val copyIntent = Intent(context, CopyBroadcastReceiver::class.java).apply {
-            action = CopyBroadcastReceiver.ACTION_COPY
-            putExtra(CopyBroadcastReceiver.KEY_NOTIFICATION_TEXT, pushNotificationText)
-        }
-
-        val unpinPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getBroadcast(
+        val unpinPendingIntent = UnpinBroadcastReceiver.getPendingIntent(
+            context, notificationId, notificationEntityId
+        )
+        val copyPendingIntent = CopyBroadcastReceiver.getPendingIntent(
+            context, notificationId, pushNotificationText
+        )
+        val cancelledNotificationPendingIntent =
+            NotificationCancellationBroadcastReceiver.getPendingIntent(
                 context,
                 notificationId,
-                unpinIntent,
-                PendingIntent.FLAG_IMMUTABLE
+                notificationEntityId
             )
-        } else {
-            PendingIntent.getBroadcast(
-                context,
-                notificationId,
-                unpinIntent,
-                0
-            )
-        }
-
-        val copyPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getBroadcast(
-                context,
-                notificationId,
-                copyIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                context,
-                notificationId,
-                copyIntent,
-                0
-            )
-        }
 
         val notification = NotificationCompat.Builder(context, MainNotificationChannel.CHANNEL_ID)
             .apply {
@@ -128,6 +91,7 @@ class NotificationSender @Inject constructor(
                     context.getString(R.string.unpin),
                     unpinPendingIntent
                 )
+                setDeleteIntent(cancelledNotificationPendingIntent)
             }
             .build()
 

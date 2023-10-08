@@ -17,4 +17,12 @@ class HistoryRepository @Inject constructor(
     suspend fun deleteHistory(historyEntity: HistoryEntity) = withContext(Dispatchers.IO) {
         historyLocalDataSource.deleteHistory(historyEntity)
     }
+
+    suspend fun markAsCancelled(id: Long) = withContext(Dispatchers.IO) {
+        historyLocalDataSource.markAsCancelled(id)
+    }
+
+    suspend fun getActiveHistoryEntities(): List<HistoryEntity> = withContext(Dispatchers.IO) {
+        historyLocalDataSource.getActiveHistoryEntities()
+    }
 }

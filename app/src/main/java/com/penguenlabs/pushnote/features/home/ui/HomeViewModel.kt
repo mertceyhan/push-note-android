@@ -51,22 +51,30 @@ class HomeViewModel @Inject constructor(
     }
 
     fun sendNotification(pushNotificationText: String, isPinnedNote: Boolean) {
-        homeScreeState = if (pushNotificationText.isEmpty()) {
-            homeScreeState.copy(isError = true)
-        } else {
-            if (isPinnedNote) {
-                notificationSender.sendPinnedNotification(pushNotificationText)
+        viewModelScope.launch {
+            homeScreeState = if (pushNotificationText.isEmpty()) {
+                homeScreeState.copy(isError = true)
             } else {
-                notificationSender.sendNotification(pushNotificationText)
+                val notificationEntityId: Long = insertHistory(pushNotificationText, isPinnedNote)
+
+                if (isPinnedNote) {
+                    notificationSender.sendPinnedNotification(
+                        notificationEntityId = notificationEntityId,
+                        pushNotificationText = pushNotificationText
+                    )
+                } else {
+                    notificationSender.sendNotification(
+                        notificationEntityId = notificationEntityId,
+                        pushNotificationText = pushNotificationText
+                    )
+                }
+
+                logPush(pushNotificationText, isPinnedNote)
+
+                launchInAppReview()
+
+                homeScreeState.copy(textFieldValue = "", isError = false)
             }
-
-            insertHistory(pushNotificationText, isPinnedNote)
-
-            logPush(pushNotificationText, isPinnedNote)
-
-            launchInAppReview()
-
-            homeScreeState.copy(textFieldValue = "", isError = false)
         }
     }
 
@@ -74,16 +82,14 @@ class HomeViewModel @Inject constructor(
         homeScreeState = homeScreeState.copy(isPinnedNote = pinnedNoteUserDefault.getUserDefault())
     }
 
-    private fun insertHistory(pushNotificationText: String, isPinnedNote: Boolean) {
-        viewModelScope.launch {
-            homeRepository.insertHistory(
-                HistoryEntity(
-                    note = pushNotificationText,
-                    time = System.currentTimeMillis(),
-                    isPinnedNote = isPinnedNote
-                )
+    private suspend fun insertHistory(pushNotificationText: String, isPinnedNote: Boolean): Long {
+        return homeRepository.insertHistory(
+            HistoryEntity(
+                note = pushNotificationText,
+                time = System.currentTimeMillis(),
+                isPinnedNote = isPinnedNote,
             )
-        }
+        )
     }
 
     private fun logPush(pushNotificationText: String, isPinnedNote: Boolean) {

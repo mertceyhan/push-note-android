@@ -10,7 +10,7 @@ class HomeRepository @Inject constructor(
     private val homeLocalDataSource: HomeLocalDataSource
 ) {
 
-    suspend fun insertHistory(historyEntity: HistoryEntity) = withContext(Dispatchers.IO) {
+    suspend fun insertHistory(historyEntity: HistoryEntity): Long = withContext(Dispatchers.IO) {
         homeLocalDataSource.insertHistory(historyEntity)
     }
 }

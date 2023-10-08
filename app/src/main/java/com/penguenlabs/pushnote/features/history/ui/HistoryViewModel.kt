@@ -46,9 +46,9 @@ class HistoryViewModel @Inject constructor(
 
     fun sendNotification(pushNotificationText: String, isPinnedNote: Boolean) {
         if (isPinnedNote) {
-            notificationSender.sendPinnedNotification(pushNotificationText)
+            notificationSender.sendPinnedNotification(pushNotificationText = pushNotificationText)
         } else {
-            notificationSender.sendNotification(pushNotificationText)
+            notificationSender.sendNotification(pushNotificationText = pushNotificationText)
         }
 
         eventLogger.log(Event.Push)

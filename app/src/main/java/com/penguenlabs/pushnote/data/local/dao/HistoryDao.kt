@@ -11,11 +11,17 @@ import kotlinx.coroutines.flow.Flow
 interface HistoryDao {
 
     @Insert
-    suspend fun insertHistory(historyEntity: HistoryEntity)
+    suspend fun insertHistory(historyEntity: HistoryEntity): Long
 
     @Query("SELECT * FROM historyentity ORDER BY id DESC")
     fun getAllHistory(): Flow<List<HistoryEntity>>
 
     @Delete
     suspend fun deleteHistory(historyEntity: HistoryEntity)
+
+    @Query("UPDATE HistoryEntity SET active = 0 WHERE id = :id")
+    suspend fun markAsCancelled(id: Long)
+
+    @Query("SELECT * FROM HistoryEntity WHERE active = 1")
+    suspend fun getActiveHistoryEntities(): List<HistoryEntity>
 }

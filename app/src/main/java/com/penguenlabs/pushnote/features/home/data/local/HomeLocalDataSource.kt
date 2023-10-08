@@ -8,6 +8,6 @@ class HomeLocalDataSource @Inject constructor(
     private val historyDao: HistoryDao
 ) {
 
-    suspend fun insertHistory(historyEntity: HistoryEntity) =
+    suspend fun insertHistory(historyEntity: HistoryEntity): Long =
         historyDao.insertHistory(historyEntity)
 }

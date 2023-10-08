@@ -8,7 +8,7 @@ import com.penguenlabs.pushnote.data.local.dao.HistoryDao
 import com.penguenlabs.pushnote.data.local.entity.HistoryEntity
 
 const val DATABASE_NAME = "history"
-private const val DATABASE_VERSION = 2
+private const val DATABASE_VERSION = 3
 
 @Suppress("unused")
 @Database(entities = [HistoryEntity::class], version = DATABASE_VERSION, exportSchema = false)
@@ -19,5 +19,11 @@ abstract class HistoryDatabase : RoomDatabase() {
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE HistoryEntity ADD COLUMN is_pinned_note INTEGER DEFAULT 0 NOT NULL")
+    }
+}
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE HistoryEntity ADD COLUMN active INTEGER DEFAULT 0 NOT NULL")
     }
 }
