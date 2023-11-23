@@ -33,7 +33,9 @@ class NotificationSender @Inject constructor(
             NotificationCancellationBroadcastReceiver.getPendingIntent(
                 context,
                 notificationId,
-                notificationEntityId
+                notificationEntityId,
+                isPinnedNote = false,
+                pushNotificationText
             )
 
         val notification = NotificationCompat.Builder(context, MainNotificationChannel.CHANNEL_ID)
@@ -73,7 +75,9 @@ class NotificationSender @Inject constructor(
             NotificationCancellationBroadcastReceiver.getPendingIntent(
                 context,
                 notificationId,
-                notificationEntityId
+                notificationEntityId,
+                true,
+                pushNotificationText
             )
 
         val notification = NotificationCompat.Builder(context, MainNotificationChannel.CHANNEL_ID)
@@ -92,12 +96,9 @@ class NotificationSender @Inject constructor(
                     unpinPendingIntent
                 )
                 setDeleteIntent(cancelledNotificationPendingIntent)
+                setOngoing(true)
             }
             .build()
-
-        notification.apply {
-            flags = Notification.FLAG_NO_CLEAR or Notification.FLAG_ONGOING_EVENT
-        }
 
         with(NotificationManagerCompat.from(context)) {
             notify(notificationId, notification)
