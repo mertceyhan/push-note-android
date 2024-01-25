@@ -3,6 +3,7 @@ plugins {
     id "kotlin-android"
     id "kotlin-kapt"
     id "dagger.hilt.android.plugin"
+    id "dev.shreyaspatil.compose-compiler-report-generator" version "1.1.0"
 }
 
 def keystorePropertiesFile = rootProject.file("release/keystore.properties")
@@ -14,12 +15,12 @@ if (isKeystorePropertiesFileExists) {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.penguenlabs.pushnote"
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode 15
         versionName "1.4.1"
 
@@ -68,12 +69,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_19
+        targetCompatibility JavaVersion.VERSION_19
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "19"
     }
 
     buildFeatures {
@@ -81,7 +82,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.8'
+        kotlinCompilerExtensionVersion '1.5.5'
     }
 
     packagingOptions {
@@ -89,43 +90,45 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+    namespace 'com.penguenlabs.pushnote'
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material:material:1.4.3"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.activity:activity-compose:1.7.2'
-    implementation("com.google.dagger:hilt-android:2.44.2")
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
-    implementation("androidx.navigation:navigation-compose:2.6.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation "androidx.compose.ui:ui:1.6.0"
+    implementation "androidx.compose.material:material:1.6.0"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.6.0"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.activity:activity-compose:1.8.2'
+    implementation("com.google.dagger:hilt-android:2.49")
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
+    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation("androidx.room:room-runtime:2.5.2")
-    implementation("androidx.room:room-ktx:2.5.2")
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
     implementation platform('com.google.firebase:firebase-bom:29.0.1')
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
     implementation "com.google.accompanist:accompanist-insets:0.22.0-rc"
-    implementation "androidx.compose.material3:material3:1.1.1"
-    implementation "androidx.compose.material3:material3-window-size-class:1.1.1"
+    implementation "androidx.compose.material3:material3:1.1.2"
+    implementation "androidx.compose.material3:material3-window-size-class:1.1.2"
     implementation 'io.github.mertceyhan:compose-inappreviews:1.0.0'
     implementation "com.google.accompanist:accompanist-permissions:0.27.1"
 
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:1.6.0"
 
-    kapt("com.google.dagger:hilt-android-compiler:2.44.2")
-    kapt("androidx.room:room-compiler:2.5.2")
+    kapt("com.google.dagger:hilt-android-compiler:2.49")
+    kapt("androidx.room:room-compiler:2.6.1")
 
     testImplementation 'junit:junit:4.13.2'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.6.0"
 }
 
 if (file("google-services.json").exists()) {

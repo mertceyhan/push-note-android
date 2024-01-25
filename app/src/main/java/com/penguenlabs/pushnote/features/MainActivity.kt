@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.SideEffect
@@ -45,9 +48,14 @@ class MainActivity : ComponentActivity() {
                     val systemUiController = rememberSystemUiController()
 
                     NavHost(
-                        navController = navController, startDestination = Destination.Home.route
+                        navController = navController,
+                        startDestination = Destination.Home.route,
+                        enterTransition = { fadeIn(tween(500)) },
+                        exitTransition = { fadeOut(tween(500)) }
                     ) {
-                        composable(route = Destination.Home.route) {
+                        composable(
+                            route = Destination.Home.route,
+                            exitTransition = { fadeOut(tween(100)) }) {
                             HomeScreen(onDialogDismissRequest = {
                                 finish()
                             }, onSettingsButtonClick = {
@@ -60,7 +68,9 @@ class MainActivity : ComponentActivity() {
                                 }
                             })
                         }
-                        composable(route = "${Destination.Home.route}/{${Destination.Home.PARAM_PUSH_NOTIFICATION_TEXT}}") { navBackStackEntry ->
+                        composable(
+                            route = "${Destination.Home.route}/{${Destination.Home.PARAM_PUSH_NOTIFICATION_TEXT}}",
+                            exitTransition = { fadeOut(tween(100)) }) { navBackStackEntry ->
                             HomeScreen(pushNotificationText = navBackStackEntry.arguments?.getString(
                                 Destination.Home.PARAM_PUSH_NOTIFICATION_TEXT, ""
                             ).orEmpty(), onDialogDismissRequest = {
@@ -78,8 +88,7 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate(route = Destination.History.route)
                             }, onBackPressClick = {
                                 navController.navigateUp()
-                            },
-                                onThemeClick = { navController.navigate(Destination.Theme.route) })
+                            })
                         }
                         composable(route = Destination.History.route) {
                             HistoryScreen(onBackPressClick = {

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.permissions.*
 import com.penguenlabs.pushnote.R
 import com.penguenlabs.pushnote.navigation.Destination
@@ -57,12 +55,7 @@ fun NotificationPermissionScreen(
                 null
             }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .systemBarsPadding()
-        ) {
+        Column {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -60,7 +61,7 @@ fun HomeScreen(
     onSettingsButtonClick: () -> Unit,
     onNotificationPermissionNeed: (pushNotificationText: String) -> Unit
 ) {
-    Screen(destination = Destination.Home) {
+    Screen(destination = Destination.Home, backgroundColor = Color.Transparent) {
         Dialog(
             onDismissRequest = onDialogDismissRequest
         ) {

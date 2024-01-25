@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.insets.systemBarsPadding
 import com.penguenlabs.pushnote.R
 import com.penguenlabs.pushnote.data.local.entity.HistoryEntity
 import com.penguenlabs.pushnote.navigation.Destination
@@ -44,12 +43,7 @@ fun HistoryScreen(
 
     Screen(context = context, destination = Destination.History) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-                    .systemBarsPadding(),
-            ) {
+            Column(modifier = Modifier.fillMaxSize()) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -2,13 +2,11 @@ package com.penguenlabs.pushnote.features.settings.ui
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.insets.systemBarsPadding
 import com.penguenlabs.pushnote.BuildConfig
 import com.penguenlabs.pushnote.R
 import com.penguenlabs.pushnote.navigation.Destination
@@ -47,20 +44,13 @@ fun SettingsScreen(
     onDarkModeChange: (Boolean) -> Unit,
     onHistoryClick: () -> Unit,
     onBackPressClick: () -> Unit,
-    onThemeClick: () -> Unit
 ) {
-
     val context = LocalContext.current
-    val scrollableState = rememberScrollState()
-    val settingsScreenState = settingsViewModel.settingsScreenState
 
     Screen(context = context, destination = Destination.Settings) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .systemBarsPadding(),
-        ) {
+        Column {
+            val scrollableState = rememberScrollState()
+            val settingsScreenState = settingsViewModel.settingsScreenState
 
             Box(
                 modifier = Modifier
@@ -90,7 +80,6 @@ fun SettingsScreen(
                     )
                 }
             }
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -105,7 +94,6 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Start
                 )
-
                 SettingItem(
                     settingTitle = stringResource(id = R.string.history),
                     settingDescription = stringResource(id = R.string.your_previous_notes),
@@ -114,7 +102,6 @@ fun SettingsScreen(
                     ),
                     onItemClick = onHistoryClick
                 )
-
                 SettingSwitchableItem(settingTitle = stringResource(id = R.string.dark_mode),
                     settingDescription = stringResource(id = R.string.enable_dark_mode),
                     settingIcon = painterResource(id = R.drawable.ic_night_mode),
@@ -123,7 +110,6 @@ fun SettingsScreen(
                         settingsViewModel.setDarkModeUserDefault(it)
                         onDarkModeChange(it)
                     })
-
                 SettingSwitchableItem(
                     settingTitle = stringResource(id = R.string.default_pinned_note),
                     settingDescription = stringResource(id = R.string.select_pinned_note_by_default),
@@ -131,7 +117,6 @@ fun SettingsScreen(
                     isChecked = settingsScreenState.defaultPinnedNoteEnabled,
                     onCheckedChange = settingsViewModel::setPinnedNoteUserDefault
                 )
-
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -141,7 +126,6 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Start
                 )
-
                 SettingItem(
                     settingTitle = stringResource(id = R.string.share_this_application),
                     settingDescription = stringResource(id = R.string.invite_your_friend_to_push_code),
@@ -162,7 +146,6 @@ fun SettingsScreen(
 
                     settingsViewModel.onShareApplicationClick()
                 }
-
                 SettingItem(
                     settingTitle = stringResource(id = R.string.report_a_problem),
                     settingDescription = stringResource(id = R.string.help_us_make_push_note_better),
@@ -178,7 +161,6 @@ fun SettingsScreen(
 
                     settingsViewModel.onReportProblemClick()
                 }
-
                 SettingItem(
                     settingTitle = stringResource(id = R.string.rate_us),
                     settingDescription = stringResource(id = R.string.share_your_feedback_with_us),
@@ -192,33 +174,12 @@ fun SettingsScreen(
 
                     settingsViewModel.onRateUsClick()
                 }
-
                 SettingItem(
                     settingTitle = stringResource(id = R.string.version, BuildConfig.VERSION_NAME),
                     settingDescription = stringResource(id = R.string.current_application_version),
                     settingIcon = painterResource(id = R.drawable.ic_code),
                     isClickable = false
                 )
-
-                if (BuildConfig.DEBUG) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        text = stringResource(id = R.string.developer_settings),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        textAlign = TextAlign.Start
-                    )
-
-                    SettingItem(
-                        settingTitle = stringResource(id = R.string.theme),
-                        settingDescription = stringResource(id = R.string.see_color_and_typography_tokens),
-                        settingIcon = painterResource(id = R.drawable.ic_palette)
-                    ) {
-                        onThemeClick()
-                    }
-                }
             }
         }
     }
