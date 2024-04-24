@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -102,7 +103,10 @@ fun HomeScreen(
                         Text(text = stringResource(id = R.string.your_note_goes_here))
                     },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        capitalization = KeyboardCapitalization.Sentences,
+                    ),
                     keyboardActions = KeyboardActions(onDone = {
                         homeViewModel.sendNotification(
                             pushNotificationText = homeScreeState.textFieldValue,
@@ -110,7 +114,7 @@ fun HomeScreen(
                         )
                     }),
                     colors = OutlinedTextFieldDefaults.colors(focusedTextColor = MaterialTheme.colorScheme.onBackground),
-                    isError = homeScreeState.isError
+                    isError = homeScreeState.isError,
                 )
                 Spacer(
                     modifier = Modifier.height(12.dp)
